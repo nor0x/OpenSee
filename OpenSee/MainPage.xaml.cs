@@ -1,7 +1,9 @@
-﻿using Microsoft.Playwright;
+﻿using Microsoft.Maui.Controls.Shapes;
+using Microsoft.Playwright;
 using OpenSee.Helpers;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Path = System.IO.Path;
 
 namespace OpenSee;
 
@@ -9,8 +11,10 @@ public partial class MainPage : ContentPage
 {
 	IPlaywright _playwright;
 	IPage page;
-	bool _isAnimating;
+	bool _entryAnimating;
+	bool _imageAnimating;
 	bool _isDownloading;
+
 	int totalCount;
 
 	string downloadFolder;
@@ -19,14 +23,14 @@ public partial class MainPage : ContentPage
 	List<string> downloadUrls = new List<string>();
 
 	string downloadSuffix = "=w500";
-    readonly string sourceSuffix = "=w123";
 	Random random;
+
 	public MainPage()
 	{
 		InitializeComponent();
 
 #if WINDOWS
-		Microsoft.Maui.Handlers.EntryHandler.EntryMapper.AppendToMapping("win-entry", (h, v) =>
+		Microsoft.Maui.Handlers.EntryHandler.EntryMapper.AppendToMapping("microsoft-ui-xaml/issues/5386", (h, v) =>
 		{
 			if (h.NativeView is Microsoft.UI.Xaml.Controls.TextBox tb)
 			{
@@ -44,6 +48,14 @@ public partial class MainPage : ContentPage
 				pb.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Blue);
 				pb.HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center;
 				pb.Width = 520;
+			}
+		});
+
+		Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping("AllowFocusOnInteraction", (h, v) =>
+		{
+			if (h.NativeView is Microsoft.UI.Xaml.Controls.Button button)
+			{
+				button.AllowFocusOnInteraction = false;
 			}
 		});
 #endif
@@ -67,6 +79,7 @@ public partial class MainPage : ContentPage
     protected async override void OnAppearing()
     {
         base.OnAppearing();
+
 		_playwright = await Playwright.CreateAsync();
 		await Task.Run(() =>
 		{
@@ -74,7 +87,6 @@ public partial class MainPage : ContentPage
 		});
 	}
 
-	bool _imageAnimating;
 	void StartAnimatingImage()
 	{
 		if (!_imageAnimating)
@@ -203,9 +215,9 @@ public partial class MainPage : ContentPage
 				}
 				else
 				{
-					if (!_isAnimating)
+					if (!_entryAnimating)
 					{
-						_isAnimating = true;
+						_entryAnimating = true;
 
 						new Animation {
 					{ 0, 0.125, new Animation (v => UrlEntry.TranslationX = v, 0, -13) },
@@ -217,7 +229,7 @@ public partial class MainPage : ContentPage
 					{ 0.75, 0.875, new Animation (v => UrlEntry.TranslationX = v, 7, -5) },
 					{ 0.875, 1, new Animation (v => UrlEntry.TranslationX = v, -5, 0) }
 				}
-						.Commit(this, "AppleShakeChildAnimations", length: 500, easing: Easing.Linear, finished: (x, y) => _isAnimating = false);
+						.Commit(this, "AppleShakeChildAnimations", length: 500, easing: Easing.Linear, finished: (x, y) => _entryAnimating = false);
 					}
 				}
 			}
