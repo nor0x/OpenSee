@@ -22,7 +22,7 @@
                 HorizontalOptions="Center"
                 Margin="0,-100,0,0">
                 <Label
-                    Text="OpenSee 👀"
+                    Text="OpenSee👀"
                     FontSize="60"
                     FontAttributes="Bold"
                     FontFamily="Pacifico"
@@ -52,7 +52,7 @@
                         HeightRequest="50"
                         VerticalTextAlignment="Center"
                         TextColor="{StaticResource PrimaryColor}"
-                        Placeholder="text goes here..."
+                        Placeholder="any OpenSea collection url..."
                         PlaceholderColor="LightGray"
                         BackgroundColor="White" />
                     <Button
