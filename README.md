@@ -1,6 +1,10 @@
 ![font](https://user-images.githubusercontent.com/3210391/159034698-10792c2f-f083-4df5-bae6-230515e03510.png)
 
 
+
+https://user-images.githubusercontent.com/3210391/159041639-b09d3df8-0f2c-4ce2-9894-6530ae2ed11e.mp4
+
+
 👀 an OpenSea downloader built with .NET MAUI
 
 more info in my blogpost:
