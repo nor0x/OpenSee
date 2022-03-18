@@ -1,5 +1,6 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Playwright;
+using Microsoft.UI.Xaml.Controls;
 using OpenSee.Helpers;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -32,20 +33,28 @@ public partial class MainPage : ContentPage
         InitializeComponent();
 
 #if WINDOWS
-        Microsoft.Maui.Handlers.EntryHandler.EntryMapper.AppendToMapping("microsoft-ui-xaml/issues/5386", (h, v) =>
+        Microsoft.Maui.Handlers.EntryHandler.Mapper.AppendToMapping("textbox", (h, v) =>
         {
-            if (h.NativeView is Microsoft.UI.Xaml.Controls.TextBox tb)
+            if (h.PlatformView is Microsoft.UI.Xaml.Controls.TextBox tb)
             {
+                var placeholder = GetTemplateChild("PlaceholderTextContentPresenter") as TextBlock;
+                if(placeholder is not null)
+                {
+                    placeholder.HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center;
+                    placeholder.VerticalAlignment = Microsoft.UI.Xaml.VerticalAlignment.Center;
+                }
+
                 tb.BorderThickness = new Microsoft.UI.Xaml.Thickness(0);
                 tb.Resources["TextControlBorderBrushFocused"] = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.White);
                 tb.VerticalContentAlignment = Microsoft.UI.Xaml.VerticalAlignment.Bottom;
+                tb.HorizontalContentAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center;
                 tb.BorderBrush = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.White);
             }
         });
 
         Microsoft.Maui.Handlers.ActivityIndicatorHandler.Mapper.AppendToMapping("mymap", (h, v) =>
         {
-            if (h.NativeView is Microsoft.UI.Xaml.Controls.ProgressBar pb)
+            if (h.PlatformView is Microsoft.UI.Xaml.Controls.ProgressBar pb)
             {
                 pb.Background = new Microsoft.UI.Xaml.Media.SolidColorBrush(Microsoft.UI.Colors.Blue);
                 pb.HorizontalAlignment = Microsoft.UI.Xaml.HorizontalAlignment.Center;
@@ -55,7 +64,7 @@ public partial class MainPage : ContentPage
 
         Microsoft.Maui.Handlers.ButtonHandler.Mapper.AppendToMapping("AllowFocusOnInteraction", (h, v) =>
         {
-            if (h.NativeView is Microsoft.UI.Xaml.Controls.Button button)
+            if (h.PlatformView is Microsoft.UI.Xaml.Controls.Button button)
             {
                 button.AllowFocusOnInteraction = false;
             }

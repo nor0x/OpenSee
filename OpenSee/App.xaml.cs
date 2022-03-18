@@ -10,10 +10,10 @@ public partial class App : Application
 	public App()
 	{
 		InitializeComponent();
-        Microsoft.Maui.Handlers.WindowHandler.WindowMapper.AppendToMapping(nameof(IWindow), (handler, view) =>
+        Microsoft.Maui.Handlers.WindowHandler.Mapper.AppendToMapping(nameof(IWindow), (handler, view) =>
         {
 #if WINDOWS
-            var nativeWindow = handler.NativeView;
+            var nativeWindow = handler.PlatformView;
             nativeWindow.Activate();
             IntPtr hWnd = WinRT.Interop.WindowNative.GetWindowHandle(nativeWindow);
             WindowId windowId = Microsoft.UI.Win32Interop.GetWindowIdFromWindow(hWnd);
