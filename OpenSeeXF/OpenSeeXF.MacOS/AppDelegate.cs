@@ -1,5 +1,7 @@
 ﻿using AppKit;
 using Foundation;
+using CommunityToolkit.Mvvm.Messaging;
+using OpenSee.Common.Helpers;
 using Xamarin.Forms;
 using Xamarin.Forms.Platform.MacOS;
 
@@ -15,8 +17,13 @@ namespace OpenSeeXF.MacOS
 
             var rect = new CoreGraphics.CGRect(200, 1000, 1024, 768);
             window = new NSWindow(rect, style, NSBackingStore.Buffered, false);
-            window.Title = "Xamarin.Forms on Mac!"; // choose your own Title here
+            window.Title = "OpenSee👀"; // choose your own Title here
             window.TitleVisibility = NSWindowTitleVisibility.Hidden;
+
+            WeakReferenceMessenger.Default.Register<OpenFolderMessage>(this, (r, m) =>
+            {
+                NSWorkspace.SharedWorkspace.OpenUrl(new NSUrl(m.Value, true));
+            });
         }
 
         public override NSWindow MainWindow

@@ -1,8 +1,8 @@
 ﻿using Microsoft.Playwright;
-using Microsoft.Toolkit.Mvvm.ComponentModel;
-using Microsoft.Toolkit.Mvvm.DependencyInjection;
-using Microsoft.Toolkit.Mvvm.Input;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using OpenSee.Common.Helpers;
 using System;
 using System.Collections.Generic;
@@ -11,18 +11,19 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 #if XAMARIN
+using Dasync.Collections;
 using Xamarin.Forms;
 #endif
 
-#if MAUI
-#endif
 
 namespace OpenSee.Common
 {
-    public class MainViewModel : ObservableRecipient
+    [INotifyPropertyChanged]
+    public partial class MainViewModel
     {
         IPlaywright _playwright;
         IPage _page;
@@ -31,13 +32,9 @@ namespace OpenSee.Common
         bool _browserReady;
         bool _downloadRequested;
         bool _isDownloading;
-
-        public ObservableCollection<string> AllUrls;
-        List<string> downloadUrls = new List<string>();
+        List<string> _downloadUrls;
 
         string _downloadSuffix = "=w500";
-
-        event EventHandler StartAnimatingImages;
 
         double _qualityValue;
         public double QualityValue
@@ -56,6 +53,8 @@ namespace OpenSee.Common
                 _qualityValue = newVal;
             }
         }
+
+        public ObservableCollection<string> AllUrls;
 
         [ObservableProperty]
         int _totalCount;
@@ -78,10 +77,11 @@ namespace OpenSee.Common
         public MainViewModel()
         {
             _downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            _downloadUrls = new List<string>();
             AllUrls = new ObservableCollection<string>();
         }
 
-        async Task Init()
+        public async Task Init()
         {
             _playwright = await Playwright.CreateAsync();
             _browserReady = File.Exists(_playwright.Firefox.ExecutablePath);
@@ -112,9 +112,9 @@ namespace OpenSee.Common
                 }
                 else
                 {
-                    DownloadButton.FontFamily = "TablerIcons";
-                    DownloadButton.Text = IconFont.x;
-                    _showLoadingGrid= true;
+                    //DownloadButton.FontFamily = "TablerIcons";
+                    //DownloadButton.Text = IconFont.x;
+                    _showLoadingGrid = true;
                     _showSettingsGrid = false;
                     if (!_browserReady)
                     {
@@ -125,7 +125,8 @@ namespace OpenSee.Common
 
                     _isDownloading = true;
                     Uri uriResult;
-                    if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) || uriResult.Host.ToLower().Contains("opensea.io") == false)
+                    Console.WriteLine("url: " + _url);
+                    if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) && uriResult.Host.ToLower().Contains("opensea.io"))
                     {
                         await using var browser = await _playwright.Firefox.LaunchAsync(new() { Headless = true });
                         _page = await browser.NewPageAsync();
@@ -152,6 +153,7 @@ namespace OpenSee.Common
             }
             catch (Exception ex)
             {
+                Console.WriteLine("exception: " + ex);
                 StatusText = ex.Message;
                 await Task.Delay(1500);
                 await Reset();
@@ -160,7 +162,7 @@ namespace OpenSee.Common
 
         async Task CollectUrls()
         {
-            StartAnimatingImage();
+            //StartAnimatingImage();
             while (AllUrls.Count() != _totalCount)
             {
                 var collectionHandle = await _page.QuerySelectorAsync(".AssetSearchView--results");
@@ -173,12 +175,41 @@ namespace OpenSee.Common
 
         async Task CheckImageSources(IReadOnlyList<IElementHandle> handles)
         {
+
+
+            using HttpClient client = new();
+#if XAMARIN
+            await handles.ParallelForEachAsync(
+                async handle =>
+                {
+                    var sourceHandle = await handle.GetAttributeAsync("src");
+                    var source = sourceHandle.ToString();
+                    if (!source.Contains(".svg"))
+                    {
+                        if (!AllUrls.Contains(source))
+                        {
+                            AllUrls.Add(source);
+                            var blankSource = source.Substring(0, source.IndexOf("=w"));
+
+                            var bytes = await client.GetByteArrayAsync(blankSource + _downloadSuffix);
+                            await File.WriteAllBytesAsync(Path.Combine(_collectionFolder, Guid.NewGuid().ToString("N") + ".png"), bytes);
+
+                            _downloadUrls.Add(source);
+                            Progress = (double)(_downloadUrls.Count()) / _totalCount;
+                            StatusText = Math.Round(_progress * 100) + "%";
+                        }
+                    }
+                },
+                maxDegreeOfParallelism: 5,
+                cancellationToken: CancellationToken.None);
+#endif
+#if MAUI
+
             ParallelOptions parallelOptions = new()
             {
                 MaxDegreeOfParallelism = 5
             };
 
-            using HttpClient client = new();
             await Parallel.ForEachAsync(handles, parallelOptions, async (handle, token) =>
             {
                 var sourceHandle = await handle.GetAttributeAsync("src");
@@ -201,10 +232,12 @@ namespace OpenSee.Common
                     }
                 }
             });
+
+#endif
         }
 
         [ICommand]
-        async Task OpenDownloadsFolder()
+        void OpenDownloadsFolder()
         {
             var directory = string.IsNullOrEmpty(_collectionFolder) ? _downloadFolder : _collectionFolder;
             WeakReferenceMessenger.Default.Send(new OpenFolderMessage(directory));
@@ -215,10 +248,13 @@ namespace OpenSee.Common
             _isDownloading = false;
             _totalCount = 0;
             AllUrls.Clear();
-            downloadUrls.Clear();
-            await _page?.CloseAsync();
-            DownloadButton.FontFamily = "Lato";
-            DownloadButton.Text = "Download";
+            _downloadUrls.Clear();
+            if (_page != null)
+            {
+                await _page?.CloseAsync();
+            }
+            //DownloadButton.FontFamily = "Lato";
+            //DownloadButton.Text = "Download";
             _progress = 0;
             StatusText = "";
             _showLoadingGrid = false;

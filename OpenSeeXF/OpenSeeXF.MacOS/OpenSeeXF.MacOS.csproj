@@ -22,23 +22,20 @@
     <IncludeMonoRuntime>false</IncludeMonoRuntime>
     <UseSGen>true</UseSGen>
     <UseRefCounting>true</UseRefCounting>
-    <HttpClientHandler>
-    </HttpClientHandler>
+    <HttpClientHandler />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
+    <DefineConstants />
     <WarningLevel>4</WarningLevel>
     <EnableCodeSigning>false</EnableCodeSigning>
     <CreatePackage>true</CreatePackage>
     <UseSGen>true</UseSGen>
     <UseRefCounting>true</UseRefCounting>
     <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
-    <HttpClientHandler>
-    </HttpClientHandler>
+    <HttpClientHandler />
     <LinkMode>SdkOnly</LinkMode>
   </PropertyGroup>
   <ItemGroup>
@@ -72,6 +69,7 @@
     <Compile Include="ViewController.designer.cs">
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
+    <Compile Include="EntryEffectMacOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
@@ -84,6 +82,10 @@
     <ProjectReference Include="..\OpenSeeXF\OpenSeeXF.csproj">
       <Project>{C832F484-15C0-45FE-82F0-AE9FAC500E95}</Project>
       <Name>OpenSeeXF</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\OpenSee.Common\OpenSee.Common.csproj">
+      <Project>{4D9076E7-A36B-4E0F-BA06-299B585FEEFC}</Project>
+      <Name>OpenSee.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -99,4 +101,10 @@
     <BundleResource Include="bg.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Mac\Xamarin.Mac.CSharp.targets" />
+  <Target Name="CopyPlaywrightMacOS" AfterTargets="CopyFilesToOutputDirectory">
+    <ItemGroup>
+      <OutFiles Include="$(TargetDir)\.playwright\**\*.*" />
+    </ItemGroup>
+    <Copy SourceFiles="@(OutFiles)" DestinationFolder="$(TargetDir)\OpenSee.app\Contents\MonoBundle\.playwright\%(RecursiveDir)" />
+  </Target>
 </Project>

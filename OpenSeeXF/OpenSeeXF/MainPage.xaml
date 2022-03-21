@@ -1,12 +1,22 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:helpers="clr-namespace:OpenSee.Common.Helpers;assembly=OpenSee.Common"
-             x:Class="OpenSeeXF.MainPage">
-    <Frame Margin="16" Padding="0" HasShadow="False"
-           BackgroundColor="#ececec"
- CornerRadius="16">
-<Grid
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:DataType="common:MainViewModel"
+    xmlns:local="clr-namespace:OpenSeeXF"
+    xmlns:helpers="clr-namespace:OpenSee.Common.Helpers;assembly=OpenSee.Common"
+    xmlns:common="clr-namespace:OpenSee.Common;assembly=OpenSee.Common"
+    x:Class="OpenSeeXF.MainPage">
+    <ContentPage.BindingContext>
+        <common:MainViewModel />
+    </ContentPage.BindingContext>
+    <Frame
+        Margin="16"
+        Padding="0"
+        HasShadow="False"
+        BackgroundColor="#ececec"
+        CornerRadius="16">
+        <Grid
             x:Name="MainGrid"
             IsClippedToBounds="True"
             VerticalOptions="FillAndExpand"
@@ -28,14 +38,15 @@
                     HorizontalOptions="Center">
                     <Label.FormattedText>
                         <FormattedString>
-                            <Span Text="OpenSee"
-                                  FontFamily="Pacifico-Regular"
-                                  FontSize="60" />
+                            <Span
+                                Text="OpenSee"
+                                FontFamily="Pacifico-Regular"
+                                FontSize="60" />
                             <Span Text=" 👀" />
                         </FormattedString>
 
                     </Label.FormattedText>
-                    </Label>
+                </Label>
                 <Label
                     Text="a free tool to download expensive JPGs or even PNGs"
                     FontSize="16"
@@ -43,24 +54,28 @@
                     TextColor="#3d3d3d"
                     HorizontalOptions="Center" />
                 <StackLayout
-Orientation="Horizontal"
+                    Orientation="Horizontal"
                     HorizontalOptions="FillAndExpand"
                     Spacing="6">
                     <Entry
                         x:Name="UrlEntry"
-                        Text=""
+                        Text="{Binding Url}"
                         WidthRequest="400"
                         HeightRequest="50"
                         VerticalTextAlignment="Center"
                         TextColor="{StaticResource PrimaryColor}"
                         Placeholder="any OpenSea collection url..."
                         PlaceholderColor="LightGray"
-                        BackgroundColor="White" />
+                        BackgroundColor="White">
+                        <Entry.Effects>
+                            <local:EntryEffect />
+                        </Entry.Effects>
+                    </Entry>
                     <Button
                         x:Name="DownloadButton"
                         WidthRequest="120"
                         Text="Download"
-                        Clicked="DownloadButton_Clicked" />
+                        Command="{Binding StartDownloadCommand}" />
                 </StackLayout>
                 <Grid
                     WidthRequest="520"
@@ -69,13 +84,14 @@ Orientation="Horizontal"
                     <Grid
                         x:Name="LoadingGrid"
                         Margin="0,12,0,0"
-                        IsVisible="false"
+                        IsVisible="{Binding ShowLoadingGrid}"
                         HorizontalOptions="FillAndExpand">
                         <ProgressBar
                             x:Name="DownloadProgress"
                             ProgressColor="{StaticResource PrimaryColor}" />
                         <Label
                             x:Name="StatusLabel"
+                            Text="{Binding StatusText}"
                             FontSize="14"
                             WidthRequest="400"
                             Margin="0,8,0,0"
@@ -84,7 +100,7 @@ Orientation="Horizontal"
                     </Grid>
                     <Grid
                         x:Name="SettingsGrid"
-                        IsVisible="false"
+                        IsVisible="{Binding ShowSettingsGrid}"
                         Margin="0,12,0,0"
                         RowDefinitions="20,40,20"
                         HeightRequest="80"
@@ -97,7 +113,6 @@ Orientation="Horizontal"
                             HorizontalOptions="Center" />
                         <Slider
                             x:Name="QualitySlider"
-                            ValueChanged="QualitySlider_ValueChanged"
                             Grid.Row="1"
                             WidthRequest="520"
                             Minimum="0"
@@ -141,12 +156,12 @@ Orientation="Horizontal"
                     HeightRequest="200"
                     Aspect="AspectFill"
                     HorizontalOptions="End" />
-                <StackLayout Orientation="Horizontal"
+                <StackLayout
+                    Orientation="Horizontal"
                     HorizontalOptions="End"
                     Grid.Row="1">
                     <Button
                         x:Name="SettingsButton"
-                        Clicked="SettingsButton_Clicked"
                         FontFamily="tabler-icons"
                         Text="{x:Static helpers:IconFont.Settings}"
                         FontSize="18"
@@ -155,7 +170,7 @@ Orientation="Horizontal"
                         WidthRequest="50"
                         HorizontalOptions="End" />
                     <Button
-                        Clicked="OpenDownloadsButton_Clicked"
+                        Command="{Binding OpenDownloadsFolderCommand}"
                         Text="{x:Static helpers:IconFont.Folder}"
                         FontFamily="tabler-icons"
                         FontSize="18"

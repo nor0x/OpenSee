@@ -9,162 +9,162 @@
         <common:MainViewModel />
     </ContentPage.BindingContext>
     <Grid
-            x:Name="MainGrid"
-            BackgroundColor="#ececec"
-            VerticalOptions="FillAndExpand"
-            Margin="16,0,16,16"
-            HorizontalOptions="FillAndExpand">
-            <Image
-                x:Name="BackgroundImage"
-                Aspect="AspectFill"
-                Source="bg.jpg"
-                Opacity="0.15"
+        x:Name="MainGrid"
+        BackgroundColor="#ececec"
+        VerticalOptions="FillAndExpand"
+        Margin="16,0,16,16"
+        HorizontalOptions="FillAndExpand">
+        <Image
+            x:Name="BackgroundImage"
+            Aspect="AspectFill"
+            Source="bg.jpg"
+            Opacity="0.15"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand" />
+        <VerticalStackLayout
+            VerticalOptions="Center"
+            HorizontalOptions="Center"
+            Margin="0,-100,0,0">
+            <Label
+                Text="OpenSee👀"
+                FontSize="60"
+                FontAttributes="Bold"
+                FontFamily="Pacifico"
+                TextColor="#3d3d3d"
+                Margin="0,0,0,0"
+                HorizontalOptions="Center" />
+            <Label
+                Text="a free tool to download expensive JPGs or even PNGs"
+                FontSize="16"
+                Margin="0,0,0,20"
+                TextColor="#3d3d3d"
+                HorizontalOptions="Center" />
+            <HorizontalStackLayout
                 HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand" />
-            <VerticalStackLayout
-                VerticalOptions="Center"
-                HorizontalOptions="Center"
-                Margin="0,-100,0,0">
-                <Label
-                    Text="OpenSee👀"
-                    FontSize="60"
-                    FontAttributes="Bold"
-                    FontFamily="Pacifico"
-                    TextColor="#3d3d3d"
-                    Margin="0,0,0,0"
-                    HorizontalOptions="Center" />
-                <Label
-                    Text="a free tool to download expensive JPGs or even PNGs"
-                    FontSize="16"
-                    Margin="0,0,0,20"
-                    TextColor="#3d3d3d"
-                    HorizontalOptions="Center" />
-                <HorizontalStackLayout
-                    HorizontalOptions="FillAndExpand"
-                    Spacing="6">
-                    <HorizontalStackLayout.Shadow>
-                        <Shadow
-                            Brush="{StaticResource PrimaryColor}"
-                            Offset="-5,0"
-                            Radius="10"
-                            Opacity="0.5" />
-                    </HorizontalStackLayout.Shadow>
-                    <Entry
-                        x:Name="UrlEntry"
-                        Text=""
-                        WidthRequest="400"
-                        HeightRequest="50"
-                        VerticalTextAlignment="Center"
-                        TextColor="{StaticResource PrimaryColor}"
-                        Placeholder="any OpenSea collection url..."
-                        PlaceholderColor="LightGray"
-                        BackgroundColor="White" />
-                    <Button
-                        x:Name="DownloadButton"
-                        WidthRequest="120"
-                        Text="Download"
-                        Clicked="DownloadButton_Clicked" />
-                </HorizontalStackLayout>
-                <Grid
-                    WidthRequest="520"
-                    HeightRequest="80"
-                    HorizontalOptions="Center">
-                    <Grid
-                        x:Name="LoadingGrid"
-                        Margin="0,12,0,0"
-                        IsVisible="false"
-                        HorizontalOptions="FillAndExpand">
-                        <ProgressBar
-                            x:Name="DownloadProgress"
-                            ProgressColor="{StaticResource PrimaryColor}" />
-                        <Label
-                            x:Name="StatusLabel"
-                            FontSize="14"
-                            MaximumWidthRequest="400"
-                            Margin="0,8,0,0"
-                            TextColor="#3d3d3d"
-                            HorizontalOptions="Center" />
-                    </Grid>
-                    <Grid
-                        x:Name="SettingsGrid"
-                        IsVisible="false"
-                        Margin="0,12,0,0"
-                        RowDefinitions="20,40,20"
-                        HeightRequest="80"
-                        HorizontalOptions="FillAndExpand">
-                        <Label
-                            Text="Quality"
-                            Grid.Row="0"
-                            FontSize="16"
-                            TextColor="#3d3d3d"
-                            HorizontalOptions="Center" />
-                        <Slider
-                            x:Name="QualitySlider"
-                            ValueChanged="QualitySlider_ValueChanged"
-                            Grid.Row="1"
-                            WidthRequest="520"
-                            Minimum="0"
-                            Value="1.0"
-                            Maximum="2.0"
-                            ThumbColor="{StaticResource PrimaryColor}"
-                            MinimumTrackColor="#c3c3c3"
-                            MaximumTrackColor="#c3c3c3" />
-                        <Label
-                            Text="Minimum"
-                            Grid.Row="2"
-                            FontSize="12"
-                            TextColor="#3d3d3d"
-                            HorizontalOptions="Start" />
-                        <Label
-                            Text="Medium"
-                            Grid.Row="2"
-                            FontSize="12"
-                            TextColor="#3d3d3d"
-                            HorizontalOptions="Center" />
-                        <Label
-                            Text="Maximum"
-                            Grid.Row="2"
-                            FontSize="12"
-                            TextColor="#3d3d3d"
-                            ZIndex="5"
-                            HorizontalOptions="End" />
-                    </Grid>
-                </Grid>
-            </VerticalStackLayout>
+                Spacing="6">
+                <HorizontalStackLayout.Shadow>
+                    <Shadow
+                        Brush="{StaticResource PrimaryColor}"
+                        Offset="-5,0"
+                        Radius="10"
+                        Opacity="0.5" />
+                </HorizontalStackLayout.Shadow>
+                <Entry
+                    x:Name="UrlEntry"
+                    Text=""
+                    WidthRequest="400"
+                    HeightRequest="50"
+                    VerticalTextAlignment="Center"
+                    TextColor="{StaticResource PrimaryColor}"
+                    Placeholder="any OpenSea collection url..."
+                    PlaceholderColor="LightGray"
+                    BackgroundColor="White" />
+                <Button
+                    x:Name="DownloadButton"
+                    WidthRequest="120"
+                    Text="Download"
+                    Clicked="DownloadButton_Clicked" />
+            </HorizontalStackLayout>
             <Grid
-                WidthRequest="200"
-                HorizontalOptions="End"
-                VerticalOptions="End"
-                Margin="0,0,12,12"
-                RowDefinitions="200,50"
-                RowSpacing="0">
-                <Image
-                    Grid.Row="0"
-                    x:Name="CurrentImage"
-                    WidthRequest="200"
-                    HeightRequest="200"
-                    Aspect="AspectFill"
-                    HorizontalOptions="End" />
-                <HorizontalStackLayout
-                    HorizontalOptions="End"
-                    Grid.Row="1">
-                    <Button
-                        x:Name="SettingsButton"
-                        Clicked="SettingsButton_Clicked"
-                        Text="{x:Static helpers:IconFont.Settings}"
-                        FontFamily="TablerIcons"
-                        FontSize="18"
-                        BackgroundColor="Transparent"
-                        TextColor="{StaticResource PrimaryColor}"
-                        WidthRequest="50"
+                WidthRequest="520"
+                HeightRequest="80"
+                HorizontalOptions="Center">
+                <Grid
+                    x:Name="LoadingGrid"
+                    Margin="0,12,0,0"
+                    IsVisible="false"
+                    HorizontalOptions="FillAndExpand">
+                    <ProgressBar
+                        x:Name="DownloadProgress"
+                        ProgressColor="{StaticResource PrimaryColor}" />
+                    <Label
+                        x:Name="StatusLabel"
+                        FontSize="14"
+                        MaximumWidthRequest="400"
+                        Margin="0,8,0,0"
+                        TextColor="#3d3d3d"
+                        HorizontalOptions="Center" />
+                </Grid>
+                <Grid
+                    x:Name="SettingsGrid"
+                    IsVisible="false"
+                    Margin="0,12,0,0"
+                    RowDefinitions="20,40,20"
+                    HeightRequest="80"
+                    HorizontalOptions="FillAndExpand">
+                    <Label
+                        Text="Quality"
+                        Grid.Row="0"
+                        FontSize="16"
+                        TextColor="#3d3d3d"
+                        HorizontalOptions="Center" />
+                    <Slider
+                        x:Name="QualitySlider"
+                        ValueChanged="QualitySlider_ValueChanged"
+                        Grid.Row="1"
+                        WidthRequest="520"
+                        Minimum="0"
+                        Value="1.0"
+                        Maximum="2.0"
+                        ThumbColor="{StaticResource PrimaryColor}"
+                        MinimumTrackColor="#c3c3c3"
+                        MaximumTrackColor="#c3c3c3" />
+                    <Label
+                        Text="Minimum"
+                        Grid.Row="2"
+                        FontSize="12"
+                        TextColor="#3d3d3d"
+                        HorizontalOptions="Start" />
+                    <Label
+                        Text="Medium"
+                        Grid.Row="2"
+                        FontSize="12"
+                        TextColor="#3d3d3d"
+                        HorizontalOptions="Center" />
+                    <Label
+                        Text="Maximum"
+                        Grid.Row="2"
+                        FontSize="12"
+                        TextColor="#3d3d3d"
+                        ZIndex="5"
                         HorizontalOptions="End" />
-                    <Button
-                        Clicked="OpenDownloadsButton_Clicked"
-                        Text="{x:Static helpers:IconFont.Folder}"
-                        FontFamily="TablerIcons"
-                        FontSize="18"
-                        WidthRequest="50" />
-                </HorizontalStackLayout>
+                </Grid>
             </Grid>
+        </VerticalStackLayout>
+        <Grid
+            WidthRequest="200"
+            HorizontalOptions="End"
+            VerticalOptions="End"
+            Margin="0,0,12,12"
+            RowDefinitions="200,50"
+            RowSpacing="0">
+            <Image
+                Grid.Row="0"
+                x:Name="CurrentImage"
+                WidthRequest="200"
+                HeightRequest="200"
+                Aspect="AspectFill"
+                HorizontalOptions="End" />
+            <HorizontalStackLayout
+                HorizontalOptions="End"
+                Grid.Row="1">
+                <Button
+                    x:Name="SettingsButton"
+                    Clicked="SettingsButton_Clicked"
+                    Text="{x:Static helpers:IconFont.Settings}"
+                    FontFamily="TablerIcons"
+                    FontSize="18"
+                    BackgroundColor="Transparent"
+                    TextColor="{StaticResource PrimaryColor}"
+                    WidthRequest="50"
+                    HorizontalOptions="End" />
+                <Button
+                    Clicked="OpenDownloadsButton_Clicked"
+                    Text="{x:Static helpers:IconFont.Folder}"
+                    FontFamily="TablerIcons"
+                    FontSize="18"
+                    WidthRequest="50" />
+            </HorizontalStackLayout>
         </Grid>
+    </Grid>
 </ContentPage>
