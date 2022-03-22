@@ -7,7 +7,6 @@ using Xamarin.Forms.Platform.MacOS;
 
 [assembly: ResolutionGroupName("OpenSeeXF")]
 [assembly: ExportEffect(typeof(EntryEffect), nameof(EntryEffect))]
-
 namespace OpenSeeXF.MacOS
 {
     public class EntryEffect : PlatformEffect

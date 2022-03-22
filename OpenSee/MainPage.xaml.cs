@@ -117,7 +117,6 @@ public partial class MainPage : ContentPage
 
     void AnimateEntry()
     {
-        Debug.WriteLine("animate entry");
         if (!_entryAnimating)
         {
             _entryAnimating = true;

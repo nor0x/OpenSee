@@ -15,7 +15,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
 
-#if XAMARIN
+#if MACOS
 using Dasync.Collections;
 using Xamarin.Forms;
 #endif
@@ -91,10 +91,10 @@ namespace OpenSee.Common
             try
             {
                 _playwright = await Playwright.CreateAsync();
-#if XAMARIN
+#if MACOS
                 _browserReady = File.Exists(_playwright.Webkit.ExecutablePath);
 #endif
-#if MAUI 
+#if WINDOWS 
                 _browserReady = File.Exists(_playwright.Firefox.ExecutablePath);
 #endif
                 if (!_browserReady)
@@ -102,18 +102,19 @@ namespace OpenSee.Common
                     StatusText = "warming up...";
                     await Task.Run(() =>
                     {
-#if XAMARIN
+#if MACOS
                         Microsoft.Playwright.Program.Main(new string[] { "install", "webkit" });
 #endif
-#if MAUI
-                    Microsoft.Playwright.Program.Main(new string[] { "install", "firefox" });
+#if WINDOWS
+                        Microsoft.Playwright.Program.Main(new string[] { "install", "firefox" });
 #endif
                         _browserReady = true;
+                        StatusText = "ready!";
+
                         if (_downloadRequested)
                         {
                             StartDownload();
                         }
-
                     });
                 }
             }
@@ -154,12 +155,12 @@ namespace OpenSee.Common
 
                     _isDownloading = true;
                     Uri uriResult;
-                    if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) || _url?.ToLower().Contains("opensea.io") == false)
+                    if (Uri.TryCreate(Url, UriKind.Absolute, out uriResult) || Url?.ToLower().Contains("opensea.io") == false)
                     {
-#if XAMARIN
+#if MACOS
                         await using var browser = await _playwright.Webkit.LaunchAsync(new() { Headless = true });
 #endif
-#if MAUI
+#if WINDOWS
                         await using var browser = await _playwright.Firefox.LaunchAsync(new() { Headless = true });
 #endif
                         _page = await browser.NewPageAsync();
@@ -214,7 +215,7 @@ namespace OpenSee.Common
 
 
             using HttpClient client = new();
-#if XAMARIN
+#if MACOS
             await handles.ParallelForEachAsync(
                 async handle =>
                 {
@@ -239,7 +240,7 @@ namespace OpenSee.Common
                 maxDegreeOfParallelism: 5,
                 cancellationToken: CancellationToken.None);
 #endif
-#if MAUI
+#if WINDOWS
 
             ParallelOptions parallelOptions = new()
             {
