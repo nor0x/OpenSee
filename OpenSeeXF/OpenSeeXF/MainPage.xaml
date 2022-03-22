@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:DataType="common:MainViewModel"
+    xmlns:local="clr-namespace:OpenSeeXF"
+    xmlns:helpers="clr-namespace:OpenSee.Common.Helpers;assembly=OpenSee.Common"
+    xmlns:common="clr-namespace:OpenSee.Common;assembly=OpenSee.Common"
+    x:Class="OpenSeeXF.MainPage">
+    <ContentPage.BindingContext>
+        <common:MainViewModel />
+    </ContentPage.BindingContext>
+    <Frame
+        Margin="16"
+        Padding="0"
+        HasShadow="False"
+        BackgroundColor="#ececec"
+        CornerRadius="16">
+        <Grid
+            x:Name="MainGrid"
+            IsClippedToBounds="True"
+            VerticalOptions="FillAndExpand"
+            HorizontalOptions="FillAndExpand">
+            <Image
+                x:Name="BackgroundImage"
+                Aspect="AspectFill"
+                Source="bg.jpg"
+                Opacity="0.15"
+                Margin="0">
+                <Image.Effects>
+                    <local:TiledImageEffect />
+                </Image.Effects>
+            </Image>
+            <StackLayout
+                VerticalOptions="Center"
+                HorizontalOptions="Center"
+                Margin="0,-100,0,0">
+                <Label
+                    FontSize="60"
+                    TextColor="#3d3d3d"
+                    Margin="0,0,0,0"
+                    HorizontalOptions="Center">
+                    <Label.FormattedText>
+                        <FormattedString>
+                            <Span
+                                Text="OpenSee"
+                                FontFamily="Pacifico-Regular"
+                                FontSize="60" />
+                            <Span Text=" 👀" />
+                        </FormattedString>
+
+                    </Label.FormattedText>
+                </Label>
+                <Label
+                    Text="a free tool to download expensive JPGs or even PNGs"
+                    FontSize="16"
+                    Margin="0,0,0,20"
+                    TextColor="#3d3d3d"
+                    HorizontalOptions="Center" />
+                <StackLayout
+                    Orientation="Horizontal"
+                    HorizontalOptions="FillAndExpand"
+                    Spacing="6">
+                    <Entry
+                        x:Name="UrlEntry"
+                        Text="{Binding Url}"
+                        WidthRequest="400"
+                        HeightRequest="50"
+                        VerticalTextAlignment="Center"
+                        TextColor="{StaticResource PrimaryColor}"
+                        Placeholder="any OpenSea collection url..."
+                        PlaceholderColor="LightGray"
+                        BackgroundColor="White">
+                        <Entry.Effects>
+                            <local:EntryEffect />
+                        </Entry.Effects>
+                    </Entry>
+                    <Button
+                        x:Name="DownloadButton"
+                        WidthRequest="120"
+                        Text="Download"
+                        Command="{Binding StartDownloadCommand}">
+                        <Button.Triggers>
+                            <DataTrigger
+                                TargetType="Button"
+                                Binding="{Binding IsDownloading}"
+                                Value="True">
+                                <Setter
+                                    Property="FontFamily"
+                                    Value="tabler-icons" />
+                                <Setter
+                                    Property="Text"
+                                    Value="{x:Static helpers:IconFont.x}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="Button"
+                                Binding="{Binding IsDownloading}"
+                                Value="false">
+                                <Setter
+                                    Property="FontFamily"
+                                    Value="Lato-Regular" />
+                                <Setter
+                                    Property="Text"
+                                    Value="Download" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+
+                </StackLayout>
+                <Grid
+                    WidthRequest="520"
+                    HeightRequest="80"
+                    HorizontalOptions="Center">
+                    <Grid
+                        x:Name="LoadingGrid"
+                        Margin="0,12,0,0"
+                        IsVisible="{Binding ShowLoadingGrid}"
+                        HorizontalOptions="FillAndExpand">
+                        <ProgressBar
+                            x:Name="DownloadProgress"
+                            ProgressColor="{StaticResource PrimaryColor}" />
+                        <Label
+                            x:Name="StatusLabel"
+                            Text="{Binding StatusText}"
+                            HorizontalTextAlignment="Center"
+                            FontSize="14"
+                            WidthRequest="400"
+                            Margin="0,8,0,0"
+                            TextColor="#3d3d3d"
+                            HorizontalOptions="Center" />
+                    </Grid>
+                    <Grid
+                        x:Name="SettingsGrid"
+                        IsVisible="{Binding ShowSettingsGrid}"
+                        Margin="0,12,0,0"
+                        RowDefinitions="20,40,20"
+                        HeightRequest="80"
+                        HorizontalOptions="FillAndExpand">
+                        <Label
+                            Text="Quality"
+                            Grid.Row="0"
+                            FontSize="16"
+                            TextColor="#3d3d3d"
+                            HorizontalOptions="Center" />
+                        <Slider
+                            x:Name="QualitySlider"
+                            Grid.Row="1"
+                            WidthRequest="520"
+                            Value="{Binding QualityValue}"
+                            Minimum="0"
+                            Maximum="2.0"
+                            ThumbColor="{StaticResource PrimaryColor}"
+                            MinimumTrackColor="#c3c3c3"
+                            MaximumTrackColor="#c3c3c3" />
+                        <Label
+                            Text="Minimum"
+                            Grid.Row="2"
+                            FontSize="12"
+                            TextColor="#3d3d3d"
+                            HorizontalOptions="Start" />
+                        <Label
+                            Text="Medium"
+                            Grid.Row="2"
+                            FontSize="12"
+                            TextColor="#3d3d3d"
+                            HorizontalOptions="Center" />
+                        <Label
+                            Text="Maximum"
+                            Grid.Row="2"
+                            FontSize="12"
+                            TextColor="#3d3d3d"
+                            HorizontalOptions="End" />
+                    </Grid>
+                </Grid>
+            </StackLayout>
+            <Grid
+                WidthRequest="200"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,12,12"
+                RowDefinitions="200,50"
+                RowSpacing="0">
+                <Image
+                    Grid.Row="0"
+                    x:Name="CurrentImage"
+                    WidthRequest="200"
+                    HeightRequest="200"
+                    Aspect="AspectFill"
+                    HorizontalOptions="End" />
+                <StackLayout
+                    Orientation="Horizontal"
+                    HorizontalOptions="End"
+                    Grid.Row="1">
+                    <Button
+                        x:Name="SettingsButton"
+                        Command="{Binding ToggleSettingsCommand}"
+                        FontFamily="tabler-icons"
+                        Text="{x:Static helpers:IconFont.Settings}"
+                        FontSize="18"
+                        BackgroundColor="Transparent"
+                        TextColor="{StaticResource PrimaryColor}"
+                        WidthRequest="50"
+                        HorizontalOptions="End" />
+                    <Button
+                        Command="{Binding OpenDownloadsFolderCommand}"
+                        Text="{x:Static helpers:IconFont.Folder}"
+                        FontFamily="tabler-icons"
+                        FontSize="18"
+                        WidthRequest="50" />
+                </StackLayout>
+            </Grid>
+        </Grid>
+    </Frame>
+</ContentPage>

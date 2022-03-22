@@ -1,8 +1,8 @@
-﻿<Application
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Application
+    xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:OpenSee"
-    x:Class="OpenSee.App">
+    x:Class="OpenSeeXF.App">
     <Application.Resources>
         <ResourceDictionary>
 
@@ -15,7 +15,7 @@
                     Value="{DynamicResource PrimaryColor}" />
                 <Setter
                     Property="FontFamily"
-                    Value="Lato" />
+                    Value="Lato-Regular" />
             </Style>
 
             <Style TargetType="Button">
@@ -24,7 +24,7 @@
                     Value="{DynamicResource SecondaryColor}" />
                 <Setter
                     Property="FontFamily"
-                    Value="Lato" />
+                    Value="Lato-Regular" />
                 <Setter
                     Property="BackgroundColor"
                     Value="{DynamicResource PrimaryColor}" />

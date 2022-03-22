@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace OpenSee.Helpers
+namespace OpenSee.Common.Helpers
 {
-    internal static class Extensions
+
+    public static class Extensions
     {
         public static string GetNumbers(this string text)
         {
@@ -24,7 +23,7 @@ namespace OpenSee.Helpers
             {
                 return list.ElementAt(random.Next(list.Count()));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return list.FirstOrDefault();
             }
