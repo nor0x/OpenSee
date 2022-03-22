@@ -13,7 +13,7 @@
 		<ApplicationTitle>OpenSee</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.opensee</ApplicationId>
+		<ApplicationId>com.nor0x.opensee</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationVersion>1</ApplicationVersion>

@@ -3,9 +3,9 @@
 <plist version="1.0">
 	<dict>
 		<key>CFBundleName</key>
-		<string>OpenSeeXF.MacOS</string>
+		<string>OpenSee</string>
 		<key>CFBundleIdentifier</key>
-		<string>com.nor0x.OpenSeeXF-MacOS</string>
+		<string>com.nor0x.opensee</string>
 		<key>CFBundleShortVersionString</key>
 		<string>1.0</string>
 		<key>CFBundleVersion</key>
