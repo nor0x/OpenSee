@@ -1,6 +1,6 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
 using Microsoft.Playwright;
-using Microsoft.Toolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.UI.Xaml.Controls;
 using OpenSee.Common;
 using OpenSee.Common.Helpers;
@@ -85,6 +85,7 @@ public partial class MainPage : ContentPage
     protected async override void OnAppearing()
     {
         base.OnAppearing();
+        await ViewModel.Init();
     }
 
     void StartAnimatingImage()
@@ -104,7 +105,7 @@ public partial class MainPage : ContentPage
             }
             .Commit(this, "DownloadImageAnimation", length: (uint)random.Next(100, 900), easing: Easing.CubicIn, finished: (d, b) =>
              {
-                 Device.BeginInvokeOnMainThread(() =>
+                 Dispatcher.Dispatch(() =>
                  {
                      _imageAnimating = false;
                      CurrentImage.Source = ViewModel.AllUrls.GetRandomElement(); ;
@@ -116,6 +117,7 @@ public partial class MainPage : ContentPage
 
     void AnimateEntry()
     {
+        Debug.WriteLine("animate entry");
         if (!_entryAnimating)
         {
             _entryAnimating = true;

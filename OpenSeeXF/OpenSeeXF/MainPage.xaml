@@ -79,7 +79,33 @@
                         x:Name="DownloadButton"
                         WidthRequest="120"
                         Text="Download"
-                        Command="{Binding StartDownloadCommand}" />
+                        Command="{Binding StartDownloadCommand}">
+                        <Button.Triggers>
+                            <DataTrigger
+                                TargetType="Button"
+                                Binding="{Binding IsDownloading}"
+                                Value="True">
+                                <Setter
+                                    Property="FontFamily"
+                                    Value="tabler-icons" />
+                                <Setter
+                                    Property="Text"
+                                    Value="{x:Static helpers:IconFont.x}" />
+                            </DataTrigger>
+                            <DataTrigger
+                                TargetType="Button"
+                                Binding="{Binding IsDownloading}"
+                                Value="false">
+                                <Setter
+                                    Property="FontFamily"
+                                    Value="Lato-Regular" />
+                                <Setter
+                                    Property="Text"
+                                    Value="Download" />
+                            </DataTrigger>
+                        </Button.Triggers>
+                    </Button>
+
                 </StackLayout>
                 <Grid
                     WidthRequest="520"

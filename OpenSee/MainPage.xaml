@@ -4,6 +4,7 @@
     xmlns:helpers="clr-namespace:OpenSee.Common.Helpers;assembly=OpenSee.Common"
     xmlns:common="clr-namespace:OpenSee.Common;assembly=OpenSee.Common"
     x:Class="OpenSee.MainPage"
+    x:DataType="common:MainViewModel"
     BackgroundColor="#333333">
     <ContentPage.BindingContext>
         <common:MainViewModel />
@@ -63,7 +64,22 @@
                     x:Name="DownloadButton"
                     WidthRequest="120"
                     Text="Download"
-                    Clicked="DownloadButton_Clicked" />
+                    Command="{Binding StartDownloadCommand}">
+                    <Button.Triggers>
+                        <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsDownloading}"
+                                         Value="True">
+                            <Setter Property="FontFamily" Value="tabler-icons" />
+                            <Setter Property="Text" Value="{x:Static helpers:IconFont.x}" />
+                        </DataTrigger>
+                        <DataTrigger TargetType="Button"
+                                         Binding="{Binding IsDownloading}"
+                                         Value="false">
+                            <Setter Property="FontFamily" Value="Lato-Regular" />
+                            <Setter Property="Text" Value="Download" />
+                        </DataTrigger>
+                    </Button.Triggers>
+                </Button>
             </HorizontalStackLayout>
             <Grid
                 WidthRequest="520"
@@ -72,7 +88,7 @@
                 <Grid
                     x:Name="LoadingGrid"
                     Margin="0,12,0,0"
-                    IsVisible="false"
+                    IsVisible="true"
                     HorizontalOptions="FillAndExpand">
                     <ProgressBar
                         x:Name="DownloadProgress"
@@ -80,6 +96,7 @@
                     <Label
                         x:Name="StatusLabel"
                         FontSize="14"
+                        Text="{Binding StatusText}"
                         MaximumWidthRequest="400"
                         Margin="0,8,0,0"
                         TextColor="#3d3d3d"
@@ -87,7 +104,7 @@
                 </Grid>
                 <Grid
                     x:Name="SettingsGrid"
-                    IsVisible="false"
+                    IsVisible="{Binding ShowSettingsGrid}"
                     Margin="0,12,0,0"
                     RowDefinitions="20,40,20"
                     HeightRequest="80"
@@ -100,11 +117,10 @@
                         HorizontalOptions="Center" />
                     <Slider
                         x:Name="QualitySlider"
-                        ValueChanged="QualitySlider_ValueChanged"
+                        Value="{Binding QualityValue}"
                         Grid.Row="1"
                         WidthRequest="520"
                         Minimum="0"
-                        Value="1.0"
                         Maximum="2.0"
                         ThumbColor="{StaticResource PrimaryColor}"
                         MinimumTrackColor="#c3c3c3"
@@ -150,7 +166,7 @@
                 Grid.Row="1">
                 <Button
                     x:Name="SettingsButton"
-                    Clicked="SettingsButton_Clicked"
+                    Command="{Binding ToggleSettingsCommand}"
                     Text="{x:Static helpers:IconFont.Settings}"
                     FontFamily="TablerIcons"
                     FontSize="18"
@@ -159,7 +175,7 @@
                     WidthRequest="50"
                     HorizontalOptions="End" />
                 <Button
-                    Clicked="OpenDownloadsButton_Clicked"
+                    Command="{Binding OpenDownloadsFolderCommand}"
                     Text="{x:Static helpers:IconFont.Folder}"
                     FontFamily="TablerIcons"
                     FontSize="18"

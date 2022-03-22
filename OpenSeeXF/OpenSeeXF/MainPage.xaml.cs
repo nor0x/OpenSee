@@ -108,11 +108,6 @@ namespace OpenSeeXF
                 });
             }
         }
-
-        void Button_Clicked(System.Object sender, System.EventArgs e)
-        {
-            Console.WriteLine("url is: " + ViewModel.Url);
-        }
     }
 }
 

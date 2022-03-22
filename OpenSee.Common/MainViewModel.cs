@@ -13,6 +13,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 #if XAMARIN
 using Dasync.Collections;
@@ -31,7 +32,6 @@ namespace OpenSee.Common
         string _collectionFolder;
         bool _browserReady;
         bool _downloadRequested;
-        bool _isDownloading;
         List<string> _downloadUrls;
 
         string _downloadSuffix = "=w500";
@@ -74,6 +74,10 @@ namespace OpenSee.Common
         [ObservableProperty]
         bool _showSettingsGrid;
 
+        [ObservableProperty]
+        bool _isDownloading;
+
+
         public MainViewModel()
         {
             _downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
@@ -84,31 +88,40 @@ namespace OpenSee.Common
 
         public async Task Init()
         {
-            _playwright = await Playwright.CreateAsync();
-#if XAMARIN
-            _browserReady = File.Exists(_playwright.Webkit.ExecutablePath);
-#endif
-#if MAUI
-            _browserReady = File.Exists(_playwright.Firefox.ExecutablePath);
-#endif
-            if (!_browserReady)
+            try
             {
-                StatusText = "warming up...";
-                await Task.Run(() =>
-                {
+                _playwright = await Playwright.CreateAsync();
 #if XAMARIN
-                    Microsoft.Playwright.Program.Main(new string[] { "install", "webkit" });
+                _browserReady = File.Exists(_playwright.Webkit.ExecutablePath);
+#endif
+#if MAUI 
+                Debug.WriteLine("playwright firefox");
+                Debug.WriteLine("exists: " + _playwright.Firefox.ExecutablePath);
+                _browserReady = File.Exists(_playwright.Firefox.ExecutablePath);
+#endif
+                if (!_browserReady)
+                {
+                    StatusText = "warming up...";
+                    await Task.Run(() =>
+                    {
+#if XAMARIN
+                        Microsoft.Playwright.Program.Main(new string[] { "install", "webkit" });
 #endif
 #if MAUI
                     Microsoft.Playwright.Program.Main(new string[] { "install", "firefox" });
 #endif
-                    _browserReady = true;
-                    if (_downloadRequested)
-                    {
-                        StartDownload();
-                    }
+                        _browserReady = true;
+                        if (_downloadRequested)
+                        {
+                            StartDownload();
+                        }
 
-                });
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                StatusText = ex.Message;
             }
         }
 
@@ -126,16 +139,16 @@ namespace OpenSee.Common
         {
             try
             {
+                Debug.WriteLine("startdownload: " + _isDownloading);
                 if (_isDownloading)
                 {
                     await Reset();
                 }
                 else
                 {
-                    //DownloadButton.FontFamily = "TablerIcons";
-                    //DownloadButton.Text = IconFont.x;
                     ShowLoadingGrid = true;
                     ShowSettingsGrid = false;
+                    Debug.WriteLine("browser ready: " + _browserReady);
                     if (!_browserReady)
                     {
                         _downloadRequested = true;
@@ -145,8 +158,8 @@ namespace OpenSee.Common
 
                     _isDownloading = true;
                     Uri uriResult;
-                    Console.WriteLine("url: " + _url);
-                    if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) && uriResult.Host.ToLower().Contains("opensea.io"))
+                    Debug.WriteLine("url: " + _url);
+                    if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) || _url.ToLower().Contains("opensea.io") == false)
                     {
 #if XAMARIN
                         await using var browser = await _playwright.Webkit.LaunchAsync(new() { Headless = true });
@@ -180,7 +193,7 @@ namespace OpenSee.Common
             }
             catch (Exception ex)
             {
-                Console.WriteLine("exception: " + ex);
+                Debug.WriteLine("exception: " + ex);
                 StatusText = ex.Message;
                 await Task.Delay(1500);
                 await Reset();
@@ -189,7 +202,6 @@ namespace OpenSee.Common
 
         async Task CollectUrls()
         {
-            //StartAnimatingImage();
             while (AllUrls.Count() != _totalCount)
             {
                 var collectionHandle = await _page.QuerySelectorAsync(".AssetSearchView--results");
@@ -251,11 +263,10 @@ namespace OpenSee.Common
                         var bytes = await client.GetByteArrayAsync(blankSource + _downloadSuffix);
                         await File.WriteAllBytesAsync(Path.Combine(_collectionFolder, Guid.NewGuid().ToString("N") + ".png"), bytes);
 
-                        downloadUrls.Add(source);
-                        var progress = (double)(downloadUrls.Count()) / _totalCount;
-                        await DownloadProgress.ProgressTo(progress, 100, Easing.CubicOut);
-                        
-                        StatusText = Math.Round(progress * 100) + "%";
+                        _downloadUrls.Add(source);
+                        Progress = (double)(_downloadUrls.Count()) / _totalCount;
+
+                        StatusText = Math.Round(Progress * 100) + "%";
                     }
                 }
             });
@@ -279,14 +290,11 @@ namespace OpenSee.Common
             {
                 await _page?.CloseAsync();
             }
-            //DownloadButton.FontFamily = "Lato";
-            //DownloadButton.Text = "Download";
             _progress = 0;
             StatusText = "";
             ShowLoadingGrid = false;
             ShowSettingsGrid = false;
             WeakReferenceMessenger.Default.Send(new ToggleAnimationMessage(false));
         }
-
     }
 }
