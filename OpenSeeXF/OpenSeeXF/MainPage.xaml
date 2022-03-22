@@ -26,7 +26,11 @@
                 Aspect="AspectFill"
                 Source="bg.jpg"
                 Opacity="0.15"
-                Margin="0" />
+                Margin="0">
+                <Image.Effects>
+                    <local:TiledImageEffect />
+                </Image.Effects>
+            </Image>
             <StackLayout
                 VerticalOptions="Center"
                 HorizontalOptions="Center"

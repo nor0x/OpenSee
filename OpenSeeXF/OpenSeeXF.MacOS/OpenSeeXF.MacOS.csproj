@@ -70,6 +70,7 @@
       <DependentUpon>ViewController.cs</DependentUpon>
     </Compile>
     <Compile Include="EntryEffectMacOS.cs" />
+    <Compile Include="TiledImageEffectMacOS.cs" />
   </ItemGroup>
   <ItemGroup>
     <InterfaceDefinition Include="Main.storyboard" />
