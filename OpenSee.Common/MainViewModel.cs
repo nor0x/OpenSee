@@ -50,7 +50,7 @@ namespace OpenSee.Common
                     2 => "=w9999",
                     _ => "=w200"
                 };
-                _qualityValue = newVal;
+                SetProperty(ref _qualityValue, newVal);
             }
         }
 
@@ -79,18 +79,29 @@ namespace OpenSee.Common
             _downloadFolder = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             _downloadUrls = new List<string>();
             AllUrls = new ObservableCollection<string>();
+            QualityValue = 1.0;
         }
 
         public async Task Init()
         {
             _playwright = await Playwright.CreateAsync();
+#if XAMARIN
+            _browserReady = File.Exists(_playwright.Webkit.ExecutablePath);
+#endif
+#if MAUI
             _browserReady = File.Exists(_playwright.Firefox.ExecutablePath);
+#endif
             if (!_browserReady)
             {
                 StatusText = "warming up...";
                 await Task.Run(() =>
                 {
+#if XAMARIN
+                    Microsoft.Playwright.Program.Main(new string[] { "install", "webkit" });
+#endif
+#if MAUI
                     Microsoft.Playwright.Program.Main(new string[] { "install", "firefox" });
+#endif
                     _browserReady = true;
                     if (_downloadRequested)
                     {
@@ -98,6 +109,15 @@ namespace OpenSee.Common
                     }
 
                 });
+            }
+        }
+
+        [ICommand]
+        void ToggleSettings()
+        {
+            if (!ShowLoadingGrid)
+            {
+                ShowSettingsGrid = !ShowSettingsGrid;
             }
         }
 
@@ -114,8 +134,8 @@ namespace OpenSee.Common
                 {
                     //DownloadButton.FontFamily = "TablerIcons";
                     //DownloadButton.Text = IconFont.x;
-                    _showLoadingGrid = true;
-                    _showSettingsGrid = false;
+                    ShowLoadingGrid = true;
+                    ShowSettingsGrid = false;
                     if (!_browserReady)
                     {
                         _downloadRequested = true;
@@ -128,7 +148,12 @@ namespace OpenSee.Common
                     Console.WriteLine("url: " + _url);
                     if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) && uriResult.Host.ToLower().Contains("opensea.io"))
                     {
+#if XAMARIN
+                        await using var browser = await _playwright.Webkit.LaunchAsync(new() { Headless = true });
+#endif
+#if MAUI
                         await using var browser = await _playwright.Firefox.LaunchAsync(new() { Headless = true });
+#endif
                         _page = await browser.NewPageAsync();
                         var collectionUrl = $"{uriResult.ToString().Trim('/')}?search[sortAscending]=false&search[sortBy]=CREATED_DATE";
                         await _page.GotoAsync(collectionUrl);
@@ -143,6 +168,8 @@ namespace OpenSee.Common
 
                         _collectionFolder = Path.Combine(_downloadFolder, uriResult.LocalPath.Replace("collection/", "").Trim('/'));
                         Directory.CreateDirectory(_collectionFolder);
+                        WeakReferenceMessenger.Default.Send(new ToggleAnimationMessage(true));
+
                         await CollectUrls();
                     }
                     else
@@ -232,7 +259,6 @@ namespace OpenSee.Common
                     }
                 }
             });
-
 #endif
         }
 
@@ -257,8 +283,9 @@ namespace OpenSee.Common
             //DownloadButton.Text = "Download";
             _progress = 0;
             StatusText = "";
-            _showLoadingGrid = false;
-            _showSettingsGrid = false;
+            ShowLoadingGrid = false;
+            ShowSettingsGrid = false;
+            WeakReferenceMessenger.Default.Send(new ToggleAnimationMessage(false));
         }
 
     }

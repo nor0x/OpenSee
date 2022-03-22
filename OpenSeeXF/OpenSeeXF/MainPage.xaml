@@ -92,6 +92,7 @@
                         <Label
                             x:Name="StatusLabel"
                             Text="{Binding StatusText}"
+                            HorizontalTextAlignment="Center"
                             FontSize="14"
                             WidthRequest="400"
                             Margin="0,8,0,0"
@@ -115,8 +116,8 @@
                             x:Name="QualitySlider"
                             Grid.Row="1"
                             WidthRequest="520"
+                            Value="{Binding QualityValue}"
                             Minimum="0"
-                            Value="1.0"
                             Maximum="2.0"
                             ThumbColor="{StaticResource PrimaryColor}"
                             MinimumTrackColor="#c3c3c3"
@@ -162,6 +163,7 @@
                     Grid.Row="1">
                     <Button
                         x:Name="SettingsButton"
+                        Command="{Binding ToggleSettingsCommand}"
                         FontFamily="tabler-icons"
                         Text="{x:Static helpers:IconFont.Settings}"
                         FontSize="18"

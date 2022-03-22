@@ -18,4 +18,11 @@ namespace OpenSee.Common.Helpers
         {
         }
     }
+
+    public class ToggleAnimationMessage : ValueChangedMessage<bool>
+    {
+        public ToggleAnimationMessage(bool toggle) : base(toggle)
+        {
+        }
+    }
 }

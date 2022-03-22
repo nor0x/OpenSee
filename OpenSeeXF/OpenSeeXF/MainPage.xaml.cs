@@ -24,11 +24,24 @@ namespace OpenSeeXF
         public MainPage()
         {
             InitializeComponent();
+            random = new Random();
+            CurrentImage.PropertyChanged += CurrentImage_PropertyChanged;
 
             WeakReferenceMessenger.Default.Register<UrlValidMessage>(this, async (r, m) =>
             {
-                Console.WriteLine("url valid? " + m.Value);
                 AnimateEntry();
+            });
+
+            WeakReferenceMessenger.Default.Register<ToggleAnimationMessage>(this, (r, m) =>
+            {
+                if (m.Value)
+                {
+                    StartAnimatingImage();
+                }
+                else
+                {
+                    this.AbortAnimation("DownloadImageAnimation");
+                }
             });
         }
 
@@ -59,11 +72,47 @@ namespace OpenSeeXF
             }
         }
 
+        private async void CurrentImage_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(CurrentImage.IsLoading))
+            {
+                if (!CurrentImage.IsLoading)
+                {
+                    StartAnimatingImage();
+                }
+            }
+        }
+
+        void StartAnimatingImage()
+        {
+            if (!_imageAnimating)
+            {
+                _imageAnimating = true;
+                new Animation
+            {
+                { 0, 0.150, new Animation (v => CurrentImage.ScaleX = v, 1, 1.1) },
+                { 0, 0.350, new Animation (v => CurrentImage.ScaleX = v, 1, 1.4) },
+                { 0, 0.850, new Animation (v => CurrentImage.ScaleX = v, 1, 0) },
+                { 0, 0.900, new Animation (v => CurrentImage.TranslationY = v, 0, 120) },
+                { 0, 0.900, new Animation (v => CurrentImage.TranslationX = v, 0, 100) },
+                { 0, 0.900, new Animation (v => CurrentImage.ScaleY = v, 1, 0) },
+                { 0, 0.900, new Animation (v => CurrentImage.Opacity = v, 1, 0) },
+            }
+                .Commit(this, "DownloadImageAnimation", length: (uint)random.Next(100, 900), easing: Easing.CubicIn, finished: (d, b) =>
+                {
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        _imageAnimating = false;
+                        CurrentImage.Source = ViewModel.AllUrls.GetRandomElement();
+                    });
+                });
+            }
+        }
+
         void Button_Clicked(System.Object sender, System.EventArgs e)
         {
             Console.WriteLine("url is: " + ViewModel.Url);
         }
-
     }
 }
 
