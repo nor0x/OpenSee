@@ -10,11 +10,8 @@ namespace OpenSeeXF.MacOS
 {
     public class TiledImageEffect : PlatformEffect
     {
-
-
         protected override void OnAttached()
         {
-            Console.WriteLine("control: " + Control.GetType().FullName);
             if(Control is NSImageView imgView)
             {
                 var c = NSColor.FromPatternImage(imgView.Image);

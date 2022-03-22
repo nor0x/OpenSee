@@ -95,8 +95,6 @@ namespace OpenSee.Common
                 _browserReady = File.Exists(_playwright.Webkit.ExecutablePath);
 #endif
 #if MAUI 
-                Debug.WriteLine("playwright firefox");
-                Debug.WriteLine("exists: " + _playwright.Firefox.ExecutablePath);
                 _browserReady = File.Exists(_playwright.Firefox.ExecutablePath);
 #endif
                 if (!_browserReady)
@@ -139,7 +137,6 @@ namespace OpenSee.Common
         {
             try
             {
-                Debug.WriteLine("startdownload: " + _isDownloading);
                 if (_isDownloading)
                 {
                     await Reset();
@@ -148,7 +145,6 @@ namespace OpenSee.Common
                 {
                     ShowLoadingGrid = true;
                     ShowSettingsGrid = false;
-                    Debug.WriteLine("browser ready: " + _browserReady);
                     if (!_browserReady)
                     {
                         _downloadRequested = true;
@@ -158,8 +154,7 @@ namespace OpenSee.Common
 
                     _isDownloading = true;
                     Uri uriResult;
-                    Debug.WriteLine("url: " + _url);
-                    if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) || _url.ToLower().Contains("opensea.io") == false)
+                    if (Uri.TryCreate(_url, UriKind.Absolute, out uriResult) || _url?.ToLower().Contains("opensea.io") == false)
                     {
 #if XAMARIN
                         await using var browser = await _playwright.Webkit.LaunchAsync(new() { Headless = true });
@@ -188,12 +183,14 @@ namespace OpenSee.Common
                     else
                     {
                         WeakReferenceMessenger.Default.Send(new UrlValidMessage(false));
+                        await Task.Delay(1500);
+                        await Reset();
                     }
                 }
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("exception: " + ex);
+                WeakReferenceMessenger.Default.Send(new UrlValidMessage(false));
                 StatusText = ex.Message;
                 await Task.Delay(1500);
                 await Reset();
