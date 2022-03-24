@@ -38,13 +38,11 @@ jobs:
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
     
-    - name: check directory
-      run: "cd $GITHUB_WORKSPACE && ls"
-      shell: bash
-    
-    - name: Run build script
-      run: "sh $GITHUB_WORKSPACE/build.sh"
-      shell: bash
+    - name: run build scripts
+      run: |
+        cd $GITHUB_WORKSPACE
+        ls
+        sh build.sh
       
     - name: Create Release
       # You may pin to the exact commit or the version.
