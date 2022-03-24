@@ -40,6 +40,10 @@ jobs:
         mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
     
+    - name: check directory
+      run: "cd ${GITHUB_WORKSPACE} && ls"
+      shell: bash
+    
     - name: Run build script
       run: "sh ${GITHUB_WORKSPACE}/build.sh"
       shell: bash
