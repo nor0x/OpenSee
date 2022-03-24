@@ -2,6 +2,7 @@
 
 
 👀 an OpenSea downloader built with .NET MAUI
+
 [![macOS](https://github.com/nor0x/OpenSee/actions/workflows/macos.yml/badge.svg)](https://github.com/nor0x/OpenSee/actions/workflows/macos.yml)
 
 
