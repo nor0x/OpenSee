@@ -7,9 +7,7 @@ jobs:
   build:
 
     runs-on: macos-latest
-    env:
-      source-directory: ./
-      
+    
     steps:
     - name: Install the Apple certificate and provisioning profile
       env:
