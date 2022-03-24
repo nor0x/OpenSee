@@ -13,5 +13,5 @@ dotnet build OpenSee.Common/OpenSee.Common.csproj -c Release
 
 /Applications/Visual\ Studio.app/Contents/MacOS/vstool build -t:Build -c:"Release" {$GITHUB_WORKSPACE}/OpenSee.sln
 
-cd {$GITHUB_WORKSPACE}/OpenSeeXF/OpenSeeXF.MacOS/bin/Release
+cd $GITHUB_WORKSPACE/OpenSeeXF/OpenSeeXF.MacOS/bin/Release
 ditto -c -k --sequesterRsrc --keepParent OpenSee.app OpenSee.app.zip 
