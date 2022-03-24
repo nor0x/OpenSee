@@ -41,7 +41,7 @@ jobs:
         cp $PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles
     
     - name: Run build script
-      run: "${GITHUB_WORKSPACE}/build.sh"
+      run: "sh ${GITHUB_WORKSPACE}/build.sh"
       shell: bash
       
     - name: Create Release
