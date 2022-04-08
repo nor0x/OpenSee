@@ -4,6 +4,7 @@
 👀 an OpenSea downloader built with .NET MAUI
 
 [![macOS](https://github.com/nor0x/OpenSee/actions/workflows/macos.yml/badge.svg)](https://github.com/nor0x/OpenSee/actions/workflows/macos.yml)
+[![Windows](https://github.com/nor0x/OpenSee/actions/workflows/windows.yml/badge.svg)](https://github.com/nor0x/OpenSee/actions/workflows/windows.yml)
 
 
 https://user-images.githubusercontent.com/3210391/159041639-b09d3df8-0f2c-4ce2-9894-6530ae2ed11e.mp4
