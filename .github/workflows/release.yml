@@ -113,13 +113,11 @@ jobs:
   create-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Download macOS Artifacts
       - uses: actions/download-artifact@v3
         with:
           name: macOS
           path: $GITHUB_WORKSPACE
 
-      - name: Download Windows Artifacts
       - uses: actions/download-artifact@v3
         with:
           name: Windows
@@ -130,7 +128,6 @@ jobs:
           cd $GITHUB_WORKSPACE
           ls
 
-      - name: Create Release
         # You may pin to the exact commit or the version.
         # uses: ncipollo/release-action@40bb172bd05f266cf9ba4ff965cb61e9ee5f6d01
       - uses: ncipollo/release-action@v1.9.0
