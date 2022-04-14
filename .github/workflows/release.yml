@@ -55,7 +55,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: macOS
-        path: "$GITHUB_WORKSPACE/OpenSeeXF/OpenSeeXF.MacOS/bin/Release/OpenSee.app.zip"
+        path: ${{ github.workspace }}/OpenSeeXF/OpenSeeXF.MacOS/bin/Release/OpenSee.app.zip
 
   build-windows:
     runs-on: windows-latest  # For a list of available runner types, refer to
@@ -108,7 +108,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: Windows
-        path: "$env:GITHUB_WORKSPACE/OpenSee/OpenSee.msix"
+        path: ${{ github.workspace }}/OpenSee/OpenSee.msix
 
   create-release:
     needs: [build-macos, build-windows]

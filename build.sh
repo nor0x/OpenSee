@@ -13,11 +13,6 @@ dotnet build OpenSee.Common/OpenSee.Common.csproj -c Release
 
 msbuild OpenSee.sln /target:OpenSeeXF_MacOS:Rebuild /p:Configuration=Release
 
-echo "checking files"
-cd $GITHUB_WORKSPACE
-ls
 cd $GITHUB_WORKSPACE/OpenSeeXF/OpenSeeXF.MacOS/bin/Release
-ls
 
 ditto -c -k --sequesterRsrc --keepParent OpenSee.app OpenSee.app.zip 
-ls
