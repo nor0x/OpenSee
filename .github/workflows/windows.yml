@@ -48,15 +48,18 @@ jobs:
 
     - name: Find and Prepare MSIX
       run: |
-        cd $env:GITHUB_WORKSPACE/
+        cd $env:GITHUB_WORKSPACE/OpenSee
+        ls
         Get-ChildItem -Path ".\" -Include OpenSee*.msix -Recurse | Copy-Item -Destination .\
-        get-childitem -Path $dir | where-object { $_.Name -like "OpenSee*.msix" } | %{ rename-item -LiteralPath $_.FullName -NewName "$d`OpenSee.msix" }    
+        ls
+        get-childitem -Path $dir | where-object { $_.Name -like "OpenSee*.msix" } | %{ rename-item -LiteralPath $_.FullName -NewName "$d`OpenSee.msix" }
+        ls  
 
     - name: Create Release
       # You may pin to the exact commit or the version.
       # uses: ncipollo/release-action@40bb172bd05f266cf9ba4ff965cb61e9ee5f6d01
       uses: ncipollo/release-action@v1.9.0
       with:
-        artifacts: "$env:GITHUB_WORKSPACE/OpenSee.msix"
+        artifacts: "$env:GITHUB_WORKSPACE/OpenSee/OpenSee.msix"
         artifactContentType: "msix"
         token: ${{ secrets.GITHUB_TOKEN }}
