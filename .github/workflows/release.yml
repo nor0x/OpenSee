@@ -111,6 +111,7 @@ jobs:
         path: "$env:GITHUB_WORKSPACE/OpenSee/OpenSee.msix"
 
   create-release:
+    needs: [build-macos, build-windows]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v3
