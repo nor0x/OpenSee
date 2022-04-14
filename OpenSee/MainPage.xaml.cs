@@ -44,7 +44,7 @@ public partial class MainPage : ContentPage
             }
         });
 
-        Microsoft.Maui.Handlers.ActivityIndicatorHandler.Mapper.AppendToMapping("mymap", (h, v) =>
+        Microsoft.Maui.Handlers.ProgressBarHandler.Mapper.AppendToMapping("mymap", (h, v) =>
         {
             if (h.PlatformView is Microsoft.UI.Xaml.Controls.ProgressBar pb)
             {
