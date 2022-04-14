@@ -68,9 +68,6 @@ jobs:
     - name: Decode the pfx
       run: |
         cd $env:GITHUB_WORKSPACE
-        ls
-        cd OpenSee
-        ls
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         $certificatePath = Join-Path -Path $env:GITHUB_WORKSPACE\OpenSee -ChildPath GitHubActionsWorkflow.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
@@ -78,6 +75,7 @@ jobs:
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Build the app
       run: |
+        dotnet workload restore
         cd $env:GITHUB_WORKSPACE/OpenSee
         msbuild /restore /t:Publish /p:TargetFramework=net6.0-windows10.0.19041 /p:configuration=Release /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
 
