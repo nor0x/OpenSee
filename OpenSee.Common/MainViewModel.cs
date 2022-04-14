@@ -14,17 +14,16 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Diagnostics;
+using System.Windows.Input;
 
 #if MACOS
 using Dasync.Collections;
-using Xamarin.Forms;
 #endif
 
 
 namespace OpenSee.Common
 {
-    [INotifyPropertyChanged]
-    public partial class MainViewModel
+    public partial class MainViewModel : ObservableRecipient
     {
         IPlaywright _playwright;
         IPage _page;
@@ -56,27 +55,58 @@ namespace OpenSee.Common
 
         public ObservableCollection<string> AllUrls;
 
-        [ObservableProperty]
         int _totalCount;
+        public int TotalCount
+        {
+            get => _totalCount;
+            set => SetProperty(ref _totalCount, value);
+        }
 
-        [ObservableProperty]
         string _statusText;
+        public string StatusText
+        {
+            get => _statusText;
+            set => SetProperty(ref _statusText, value);
+        }
 
-        [ObservableProperty]
         string _url;
+        public string Url
+        {
+            get => _url;
+            set => SetProperty(ref _url, value);
+        }
 
-        [ObservableProperty]
         double _progress;
+        public double Progress
+        {
+            get => _progress;
+            set => SetProperty(ref _progress, value);
+        }
 
-        [ObservableProperty]
         bool _showLoadingGrid;
+        public bool ShowLoadingGrid
+        {
+            get => _showLoadingGrid;
+            set => SetProperty(ref _showLoadingGrid, value);
+        }
 
-        [ObservableProperty]
         bool _showSettingsGrid;
+        public bool ShowSettingsGrid
+        {
+            get => _showSettingsGrid;
+            set => SetProperty(ref _showSettingsGrid, value);
+        }
 
-        [ObservableProperty]
         bool _isDownloading;
+        public bool IsDownloading
+        {
+            get => _isDownloading;
+            set => SetProperty(ref _isDownloading, value);
+        }
 
+        public ICommand ToggleSettingsCommand { get; }
+        public ICommand StartDownloadCommand { get; }
+        public ICommand OpenDownloadsFolderCommand { get; }
 
         public MainViewModel()
         {
@@ -84,6 +114,9 @@ namespace OpenSee.Common
             _downloadUrls = new List<string>();
             AllUrls = new ObservableCollection<string>();
             QualityValue = 1.0;
+            ToggleSettingsCommand = new RelayCommand(ToggleSettings);
+            StartDownloadCommand = new AsyncRelayCommand(StartDownload);
+            OpenDownloadsFolderCommand = new RelayCommand(OpenDownloadsFolder);
         }
 
         public async Task Init()
@@ -124,7 +157,6 @@ namespace OpenSee.Common
             }
         }
 
-        [ICommand]
         void ToggleSettings()
         {
             if (!ShowLoadingGrid)
@@ -133,8 +165,7 @@ namespace OpenSee.Common
             }
         }
 
-        [ICommand]
-        private async void StartDownload()
+        private async Task StartDownload()
         {
             try
             {
@@ -271,7 +302,6 @@ namespace OpenSee.Common
 #endif
         }
 
-        [ICommand]
         void OpenDownloadsFolder()
         {
             var directory = string.IsNullOrEmpty(_collectionFolder) ? _downloadFolder : _collectionFolder;
