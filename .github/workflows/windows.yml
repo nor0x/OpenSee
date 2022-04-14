@@ -67,28 +67,28 @@ jobs:
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Decode the pfx
       run: |
-        cd $GITHUB_WORKSPACE
+        cd $env:GITHUB_WORKSPACE
         ls
         cd OpenSee
         ls
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
-        $certificatePath = Join-Path -Path $GITHUB_WORKSPACE\OpenSee -ChildPath GitHubActionsWorkflow.pfx
+        $certificatePath = Join-Path -Path $env:GITHUB_WORKSPACE\OpenSee -ChildPath GitHubActionsWorkflow.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Build the app
       run: |
-        cd $GITHUB_WORKSPACE/OpenSee
+        cd $env:GITHUB_WORKSPACE/OpenSee
         msbuild /restore /t:Publish /p:TargetFramework=net6.0-windows10.0.19041 /p:configuration=Release /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
 
 
     # Remove the pfx
     - name: Remove the pfx
-      run: Remove-Item -path $GITHUB_WORKSPACE\OpenSee\$env:Signing_Certificate
+      run: Remove-Item -path $env:GITHUB_WORKSPACE\OpenSee\$env:Signing_Certificate
 
     - name: Find and Prepare MSIX
       run: |
-        cd $GITHUB_WORKSPACE/
+        cd $env:GITHUB_WORKSPACE/
         Get-ChildItem -Path ".\" -Include OpenSee*.msix -Recurse | Copy-Item -Destination .\
         get-childitem -Path $dir | where-object { $_.Name -like "OpenSee*.msix" } | %{ rename-item -LiteralPath $_.FullName -NewName "$d`OpenSee.msix" }
         
@@ -98,6 +98,6 @@ jobs:
       # uses: ncipollo/release-action@40bb172bd05f266cf9ba4ff965cb61e9ee5f6d01
       uses: ncipollo/release-action@v1.9.0
       with:
-        artifacts: "$GITHUB_WORKSPACE/OpenSee.msix"
+        artifacts: "$env:GITHUB_WORKSPACE/OpenSee.msix"
         artifactContentType: "msix"
         token: ${{ secrets.GITHUB_TOKEN }}
