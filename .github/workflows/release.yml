@@ -135,5 +135,5 @@ jobs:
         # uses: ncipollo/release-action@40bb172bd05f266cf9ba4ff965cb61e9ee5f6d01
       - uses: ncipollo/release-action@v1.9.0
         with:
-          artifacts: "$GITHUB_WORKSPACE/OpenSee.msix", "$GITHUB_WORKSPACE/OpenSee.app.zip"
+          artifacts: "$GITHUB_WORKSPACE/OpenSee.msix,$GITHUB_WORKSPACE/OpenSee.app.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
