@@ -4,9 +4,11 @@
 👀 an OpenSea downloader built with .NET MAUI
 
 # Download
-![download-macOS](https://raw.githubusercontent.com/nor0x/OpenSee/main/art/apple-download.png)](https://github.com/nor0x/OpenSee/releases/download/OpenSee-v1/OpenSee.app.zip)
+## 🪟 
+<a href="https://github.com/nor0x/OpenSee/releases/download/OpenSee-v1/OpenSee.msix"><img style="height:80px" src="https://raw.githubusercontent.com/nor0x/OpenSee/main/art/windows-download.png" /></a>
 
-![download-macOS](https://raw.githubusercontent.com/nor0x/OpenSee/main/art/windows-download.png)](https://github.com/nor0x/OpenSee/releases/download/OpenSee-v1/OpenSee.msix)
+## 🍏 
+<a href="https://github.com/nor0x/OpenSee/releases/download/OpenSee-v1/OpenSee.app.zip"><img style="height:80px" src="https://raw.githubusercontent.com/nor0x/OpenSee/main/art/apple-download.png" /></a>
 
 # Build Status
 [![macOS](https://github.com/nor0x/OpenSee/actions/workflows/macos.yml/badge.svg)](https://github.com/nor0x/OpenSee/actions/workflows/macos.yml)
