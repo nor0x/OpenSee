@@ -75,6 +75,7 @@ jobs:
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Build the app
       run: |
+        dotnet workload install maui-windows
         dotnet workload restore
         cd $env:GITHUB_WORKSPACE/OpenSee
         msbuild /restore /t:Publish /p:TargetFramework=net6.0-windows10.0.19041 /p:configuration=Release /p:PackageCertificateKeyFile=GitHubActionsWorkflow.pfx /p:PackageCertificatePassword=${{ secrets.Pfx_Key }}
