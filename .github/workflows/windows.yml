@@ -71,7 +71,8 @@ jobs:
         $pfx_cert_byte = [System.Convert]::FromBase64String("${{ secrets.Base64_Encoded_Pfx }}")
         $certificatePath = Join-Path -Path $env:GITHUB_WORKSPACE\OpenSee -ChildPath GitHubActionsWorkflow.pfx
         [IO.File]::WriteAllBytes("$certificatePath", $pfx_cert_byte)
-        Get-ChildItem -Path $env:GITHUB_WORKSPACE\OpenSee\GitHubActionsWorkflow.pfx | Import-PfxCertificate -CertStoreLocation Cert:\CurrentUser\My -Password ${{ secrets.Pfx_Key }}
+        $SecurePassword = ConvertTo-SecureString ${{ secrets.Pfx_Key }} –asplaintext –force
+        Get-ChildItem -Path $env:GITHUB_WORKSPACE\OpenSee\GitHubActionsWorkflow.pfx | Import-PfxCertificate -CertStoreLocation Cert:\CurrentUser\My -Password $SecurePassword
 
     # Decode the base 64 encoded pfx and save the Signing_Certificate
     - name: Build the app
