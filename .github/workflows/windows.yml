@@ -82,18 +82,6 @@ jobs:
         cd $env:GITHUB_WORKSPACE/OpenSee
         msbuild /restore /t:Publish /p:TargetFramework=net6.0-windows10.0.19041 /p:configuration=Release
 
-
-    # Remove the pfx
-    - name: Remove the pfx
-      run: Remove-Item -path $env:GITHUB_WORKSPACE\OpenSee\$env:Signing_Certificate
-
-    - name: Find and Prepare MSIX
-      run: |
-        cd $env:GITHUB_WORKSPACE/
-        Get-ChildItem -Path ".\" -Include OpenSee*.msix -Recurse | Copy-Item -Destination .\
-        get-childitem -Path $dir | where-object { $_.Name -like "OpenSee*.msix" } | %{ rename-item -LiteralPath $_.FullName -NewName "$d`OpenSee.msix" }
-        
-
     - name: Create Release
       # You may pin to the exact commit or the version.
       # uses: ncipollo/release-action@40bb172bd05f266cf9ba4ff965cb61e9ee5f6d01
